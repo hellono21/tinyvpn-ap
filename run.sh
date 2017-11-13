@@ -106,11 +106,16 @@ check_ip "$PUBLIC_IP" || exiterr "Cannot detect this server's public IP. Define 
 OLDGW=`ip route show | grep '^default' | sed -e 's/default via \([^ ]*\).*/\1/'`
 ETH_IP=$(ip route get 8.8.8.8 | awk '/8.8.8.8/ {print $NF}')
 ETH_NET=$(ip route show| grep $ETH_IP| cut -f1 -d ' ')
-L2TP_NET=${VPN_L2TP_NET:-'192.168.42.0/24'}
-L2TP_LOCAL=${VPN_L2TP_LOCAL:-'192.168.42.1'}
-L2TP_POOL=${VPN_L2TP_POOL:-'192.168.42.10-192.168.42.250'}
-XAUTH_NET=${VPN_XAUTH_NET:-'192.168.43.0/24'}
-XAUTH_POOL=${VPN_XAUTH_POOL:-'192.168.43.10-192.168.43.250'}
+#L2TP_NET=${VPN_L2TP_NET:-'192.168.42.0/24'}
+L2TP_NET=${VPN_L2TP_NET:-'10.222.222.0/24'}
+#L2TP_LOCAL=${VPN_L2TP_LOCAL:-'192.168.42.1'}
+L2TP_LOCAL=${VPN_L2TP_LOCAL:-'10.222.222.1'}
+#L2TP_POOL=${VPN_L2TP_POOL:-'192.168.42.10-192.168.42.250'}
+L2TP_POOL=${VPN_L2TP_POOL:-'10.222.222.10-10.222.222.250'}
+#XAUTH_NET=${VPN_XAUTH_NET:-'192.168.43.0/24'}
+XAUTH_NET=${VPN_XAUTH_NET:-'10.222.223.0/24'}
+#XAUTH_POOL=${VPN_XAUTH_POOL:-'192.168.43.10-192.168.43.250'}
+XAUTH_POOL=${VPN_XAUTH_POOL:-'10.222.223.10-10.222.223.250'}
 DNS_SRV1=${VPN_DNS_SRV1:-'8.8.8.8'}
 DNS_SRV2=${VPN_DNS_SRV2:-'8.8.4.4'}
 
@@ -216,7 +221,7 @@ $VPN_USER:$VPN_PASSWORD_ENC:xauth-psk
 EOF
 
 #mv /etc/squid/squid.conf /etc/squid/squid.conf.1
-mkdir /etc/3proxy
+mkdir -p /etc/3proxy
 cat > /etc/3proxy/3proxy.cfg <<EOF
 #!/usr/local/bin/3proxy
 config /etc/3proxy/3proxy.cfg
