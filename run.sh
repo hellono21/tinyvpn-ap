@@ -102,6 +102,8 @@ PUBLIC_IP=${VPN_PUBLIC_IP:-''}
 # Check IP for correct format
 check_ip "$PUBLIC_IP" || PUBLIC_IP=$(wget -t 3 -T 15 -qO- http://ipv4.icanhazip.com)
 check_ip "$PUBLIC_IP" || exiterr "Cannot detect this server's public IP. Define it in your 'env' file as 'VPN_PUBLIC_IP'."
+[ -z "$VPN_DNS_SRV1" ] && VPN_DNS_SRV1=$(dig -t A -4 chinadns +short) 
+check_ip "$VPN_DNS_SRV1" || VPN_DNS_SRV1="8.8.8.8"
 
 OLDGW=`ip route show | grep '^default' | sed -e 's/default via \([^ ]*\).*/\1/'`
 ETH_IP=$(ip route get 8.8.8.8 | awk '/8.8.8.8/ {print $NF}')
