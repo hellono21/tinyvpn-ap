@@ -44,6 +44,7 @@ RUN apt-get -yqq update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./run.sh ./tinyvpn ./vpn-up.sh /opt/src/
+COPY rootfs /
 RUN chmod 755 /opt/src/run.sh
 
 EXPOSE 500/udp 4500/udp 3128/tcp
