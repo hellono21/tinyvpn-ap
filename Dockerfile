@@ -43,7 +43,7 @@ RUN apt-get -yqq update \
     && apt-get -y clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./run.sh ./tinyvpn ./vpn-up.sh /opt/src/
+COPY ./run.sh ./xTun ./vpn-up.sh /opt/src/
 COPY rootfs /
 RUN chmod 755 /opt/src/run.sh
 

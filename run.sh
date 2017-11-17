@@ -317,7 +317,28 @@ EOF
 modprobe af_key
 
 # start tinyvpn
-nohup /opt/src/tinyvpn -c -r $TUNNEL_HOST:$TUNNEL_PORT -k vpnx --keep-reconnect --log-level 5 --tun-dev tunx &
+#nohup /opt/src/tinyvpn -c -r $TUNNEL_HOST:$TUNNEL_PORT -k vpnx --keep-reconnect --log-level 5 --tun-dev tunx &
+
+NET=${XTUN_NET:-'10.222.0.4/24'}
+
+check_ip "$TUNNEL_HOST" || TUNNEL_HOST=$(dig -t A -4 $TUNNEL_HOST +short)
+
+if [ -z "$XTUN_PSK" ]; then
+  exit 1
+fi
+cat <<EOF
+
+================================================
+
+xTun NET: $NET
+xTun PSK: $XTUN_PSK
+xTun server: $TUNNEL_HOST:$TUNNEL_PORT
+
+================================================
+
+EOF
+
+/opt/src/xTun -I $NET -i tunx -k $XTUN_PSK --mtu 1280 -V -c $TUNNEL_HOST -p $TUNNEL_PORT
 
 #source /opt/src/ip-pre-up
 route add -host $TUNNEL_HOST gw $OLDGW
